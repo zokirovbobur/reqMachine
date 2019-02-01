@@ -30,7 +30,7 @@ public class RequestService {
             //threads per url
             new Thread(()->{
                 System.out.println("Thread is started for url: " + webUrl.getUrl());
-                for (int j = 0;j<webUrl.getIterationLimit();j++){
+                for (int i = 0; i <webUrl.getIterationLimit(); i++){
 
                     String uri = webUrl.getUrl();
 
@@ -54,6 +54,12 @@ public class RequestService {
                         Thread.sleep((long) ((3600*1000)/webUrl.getReqPerHour()));
 
                         //end of main work-------------------------------------------------------
+
+                        //checking whether limit has been changed or not
+
+                        if (webUrlService.finById(webUrl.getId()).getIterationLimit()<= i){
+                            break;
+                        }
 
                     }catch (IllegalArgumentException e){
                         e.printStackTrace();
@@ -83,7 +89,7 @@ public class RequestService {
         //new thread for new url
         new Thread(()->{
             System.out.println("New Thread is started for new url: " + webUrl.getUrl());
-            for (int k = 0; k <webUrl.getIterationLimit(); k++){
+            for (int i = 0; i <webUrl.getIterationLimit(); i++){
 
                 String uri = webUrl.getUrl();
 
@@ -108,6 +114,11 @@ public class RequestService {
 
                     //end of main work-------------------------------------------------------
 
+                    //checking whether limit has been changed or not
+
+                    if (webUrlService.finById(webUrl.getId()).getIterationLimit()<= i){
+                        break;
+                    }
                 }catch (IllegalArgumentException e){
                     e.printStackTrace();
                     webUrlService.deleteUrl(webUrl);
@@ -117,6 +128,7 @@ public class RequestService {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+
             }
             webUrlService.deleteUrl(webUrl);
 
